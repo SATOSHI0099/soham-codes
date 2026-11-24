@@ -4,224 +4,333 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Merry Christmas My Love</title>
+  <link href="https://googleapis.com" rel="stylesheet">
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      background: radial-gradient(circle at bottom, #0f2027, #203a43, #090d16);
+      background: radial-gradient(ellipse at bottom, #111d35 0%, #060913 100%);
       height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
       overflow: hidden;
-      font-family: 'Georgia', serif;
-      padding-bottom: 10vh;
-    }
-
-    /* Falling Snow */
-    .snow {
-      position: absolute;
-      top: -10px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      pointer-events: none;
-      animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(105vh);
-      }
-    }
-
-    /* Message Pop-up */
-    .message {
-      color: #ffd700;
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 30px;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 69, 0, 0.5);
-      opacity: 0;
-      transform: scale(0.5) translateY(30px);
-      animation: popUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      animation-delay: 2.2s; /* Appears right after tree finishes rising */
-      z-index: 10;
-      padding: 0 20px;
-    }
-
-    @keyframes popUp {
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-
-    /* Tree Container rising from below */
-    .tree-container {
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translateY(120%);
-      animation: riseUp 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      justify-content: flex-start;
+      font-family: 'Montserrat', sans-serif;
+      user-select: none;
     }
 
-    @keyframes riseUp {
-      to {
-        transform: translateY(0);
-      }
-    }
-
-    /* Glowing Star */
-    .star {
-      width: 0;
-      height: 0;
-      border-left: 18px solid transparent;
-      border-right: 18px solid transparent;
-      border-bottom: 32px solid #ffd700;
-      position: relative;
-      margin-bottom: -12px;
-      z-index: 5;
-      filter: drop-shadow(0 0 12px #ffd700);
-      animation: pulse 1.5s infinite alternate;
-    }
-
-    .star::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: 18px solid transparent;
-      border-right: 18px solid transparent;
-      border-top: 32px solid #ffd700;
+    canvas {
       position: absolute;
-      top: 10px;
-      left: -18px;
-    }
-
-    @keyframes pulse {
-      from { transform: scale(1); filter: drop-shadow(0 0 8px #ffd700); }
-      to { transform: scale(1.15); filter: drop-shadow(0 0 20px #fff); }
-    }
-
-    /* Tree Layers */
-    .layer {
-      width: 0;
-      height: 0;
-      border-left: solid transparent;
-      border-right: solid transparent;
-      border-bottom: solid #1b5e20;
-      position: relative;
-      filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.4));
-    }
-
-    .layer-1 {
-      border-left-width: 60px;
-      border-right-width: 60px;
-      border-bottom-width: 80px;
-      border-bottom-color: #2e7d32;
-      z-index: 4;
-    }
-
-    .layer-2 {
-      border-left-width: 90px;
-      border-right-width: 90px;
-      border-bottom-width: 110px;
-      border-bottom-color: #256d29;
-      margin-top: -35px;
-      z-index: 3;
-    }
-
-    .layer-3 {
-      border-left-width: 120px;
-      border-right-width: 120px;
-      border-bottom-width: 140px;
-      border-bottom-color: #1b5e20;
-      margin-top: -45px;
-      z-index: 2;
-    }
-
-    /* Tree Trunk */
-    .trunk {
-      width: 44px;
-      height: 55px;
-      background: linear-gradient(to right, #3e2723, #5d4037, #3e2723);
-      border-radius: 0 0 6px 6px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 1;
     }
 
-    /* Blinking Ornaments */
-    .ornament {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      animation: twinkle 1.2s infinite alternate;
+    .text-overlay {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: 8vh;
+      padding: 0 20px;
+      pointer-events: none;
     }
 
-    @keyframes twinkle {
-      0% { opacity: 0.4; transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px currentColor; }
+    .title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 8vw, 5.2rem);
+      color: #fff6d6;
+      text-shadow: 
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 25px rgba(255, 180, 0, 0.6),
+        0 0 50px rgba(255, 100, 50, 0.4);
+      opacity: 0;
+      transform: translateY(25px) scale(0.92);
+      animation: revealTitle 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 2.6s;
+    }
+
+    .subtitle {
+      font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      margin-top: 8px;
+      opacity: 0;
+      animation: fadeInSub 1.5s ease forwards;
+      animation-delay: 3.4s;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 16px;
+      z-index: 2;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeInSub 1.5s ease forwards;
+      animation-delay: 4s;
+    }
+
+    .hint {
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 6px;
+    }
+
+    .credit {
+      font-size: 0.8rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255, 215, 0, 0.75);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    .credit span {
+      font-weight: 600;
+      color: #fff6d6;
+    }
+
+    @keyframes revealTitle {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeInSub {
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1 class="message">Merry Christmas my love ❤️</h1>
-
-  <div class="tree-container" id="tree">
-    <div class="star"></div>
-    <div class="layer layer-1"></div>
-    <div class="layer layer-2"></div>
-    <div class="layer layer-3"></div>
-    <div class="trunk"></div>
+  <div class="text-overlay">
+    <h1 class="title">Merry Christmas my love</h1>
+    <p class="subtitle">You make every season magical ✨</p>
   </div>
 
-  <script>
-    // Generate falling snowflakes
-    for (let i = 0; i < 60; i++) {
-      const snow = document.createElement('div');
-      snow.classList.add('snow');
-      const size = Math.random() * 5 + 2 + 'px';
-      snow.style.width = size;
-      snow.style.height = size;
-      snow.style.left = Math.random() * 100 + 'vw';
-      snow.style.animationDuration = Math.random() * 3 + 3 + 's';
-      snow.style.animationDelay = Math.random() * 5 + 's';
-      document.body.appendChild(snow);
-    }
+  <div class="footer">
+    <p class="hint">Tap anywhere for magic</p>
+    <p class="credit">Created by <span>SOHAM</span></p>
+  </div>
 
-    // Add colorful lights onto the tree
-    const tree = document.getElementById('tree');
-    const colors = ['#ff1744', '#ffd700', '#00e5ff', '#ff9100', '#f50057'];
-    const positions = [
-      { top: '65px', left: '125px' },
-      { top: '85px', left: '155px' },
-      { top: '125px', left: '105px' },
-      { top: '140px', left: '140px' },
-      { top: '130px', left: '175px' },
-      { top: '190px', left: '85px' },
-      { top: '210px', left: '125px' },
-      { top: '200px', left: '165px' },
-      { top: '220px', left: '195px' }
+  <canvas id="scene"></canvas>
+
+  <script>
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Tree configuration
+    const particles = [];
+    const snow = [];
+    const clickHearts = [];
+    const totalTreeParticles = 550;
+    let buildProgress = 0; // Animates tree growing from bottom to top
+    let rotationAngle = 0;
+
+    const palette = [
+      '#ffd700', // Gold
+      '#ffeb85', // Warm light
+      '#ff3366', // Ruby ornament
+      '#00f2fe', // Ice blue sparkle
+      '#2ecc71', // Emerald glow
+      '#ffffff'  // Pure white
     ];
 
-    positions.forEach((pos, index) => {
-      const light = document.createElement('div');
-      light.classList.add('ornament');
-      const color = colors[index % colors.length];
-      light.style.backgroundColor = color;
-      light.style.color = color;
-      light.style.top = pos.top;
-      light.style.left = pos.left;
-      light.style.animationDelay = (index * 0.2) + 's';
-      tree.appendChild(light);
+    // Create 3D spiral tree particles
+    for (let i = 0; i < totalTreeParticles; i++) {
+      const progress = i / totalTreeParticles; // 0 = bottom, 1 = top
+      const angle = progress * Math.PI * 26; // Spiral turns
+      const isRibbon = i % 4 === 0;
+
+      particles.push({
+        progress,
+        baseAngle: angle,
+        radiusFactor: isRibbon ? 1.05 : (0.2 + Math.random() * 0.8),
+        size: isRibbon ? (Math.random() * 2.2 + 1.8) : (Math.random() * 2 + 1),
+        color: isRibbon ? '#ffd700' : palette[Math.floor(Math.random() * palette.length)],
+        twinkleSpeed: Math.random() * 0.05 + 0.02,
+        twinkleOffset: Math.random() * Math.PI * 2
+      });
+    }
+
+    // Create soft background snow
+    for (let i = 0; i < 110; i++) {
+      snow.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 2.2 + 0.5,
+        speedY: Math.random() * 0.8 + 0.3,
+        speedX: Math.random() * 0.4 - 0.2,
+        opacity: Math.random() * 0.6 + 0.2
+      });
+    }
+
+    // Interactive floating hearts on click/tap
+    window.addEventListener('pointerdown', (e) => {
+      for (let i = 0; i < 8; i++) {
+        clickHearts.push({
+          x: e.clientX,
+          y: e.clientY,
+          vx: (Math.random() - 0.5) * 4,
+          vy: -Math.random() * 3 - 1.5,
+          size: Math.random() * 10 + 8,
+          alpha: 1,
+          color: Math.random() > 0.4 ? '#ff3366' : '#ffd700'
+        });
+      }
     });
+
+    function drawHeart(x, y, size, color, alpha) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = color;
+      ctx.beginPath();
+      const topCurveHeight = size * 0.3;
+      ctx.moveTo(x, y + topCurveHeight);
+      ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
+      ctx.bezierCurveTo(x - size / 2, y + (size + topCurveHeight) / 2, x, y + (size + topCurveHeight) / 1.4, x, y + size);
+      ctx.bezierCurveTo(x, y + (size + topCurveHeight) / 1.4, x + size / 2, y + (size + topCurveHeight) / 2, x + size / 2, y + topCurveHeight);
+      ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + topCurveHeight);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawStar(cx, cy, spikes, outerRadius, innerRadius, alpha) {
+      let rot = Math.PI / 2 * 3;
+      let step = Math.PI / spikes;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerRadius);
+      for (let i = 0; i < spikes; i++) {
+        ctx.lineTo(cx + Math.cos(rot) * outerRadius, cy + Math.sin(rot) * outerRadius);
+        rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * innerRadius, cy + Math.sin(rot) * innerRadius);
+        rot += step;
+      }
+      ctx.closePath();
+      ctx.fillStyle = '#fff9d6';
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = '#ffd700';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    let time = 0;
+    function animate() {
+      time += 0.02;
+      ctx.clearRect(0, 0, width, height);
+
+      // Grow tree from bottom (0) to top (1)
+      if (buildProgress < 1) {
+        buildProgress += 0.008;
+      }
+      rotationAngle += 0.012;
+
+      const centerX = width / 2;
+      const baseY = height * 0.85;
+      const treeHeight = Math.min(height * 0.54, 440);
+      const maxRadius = Math.min(width * 0.34, 175);
+
+      // Draw gentle ground glow under tree
+      const groundGlow = ctx.createRadialGradient(centerX, baseY, 5, centerX, baseY, maxRadius * 1.2);
+      groundGlow.addColorStop(0, 'rgba(255, 215, 0, 0.16)');
+      groundGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = groundGlow;
+      ctx.beginPath();
+      ctx.ellipse(centerX, baseY, maxRadius * 1.2, 28, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Snow
+      snow.forEach(s => {
+        s.y += s.speedY;
+        s.x += s.speedX + Math.sin(time + s.y * 0.01) * 0.2;
+        if (s.y > height) { s.y = -5; s.x = Math.random() * width; }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+        ctx.fill();
+      });
+
+      // Sort particles by 3D depth (z) so front lights overlap back lights
+      const renderedParticles = [];
+      particles.forEach(p => {
+        if (p.progress > buildProgress) return;
+
+        const currentAngle = p.baseAngle + rotationAngle;
+        const coneRadius = (1 - p.progress) * maxRadius * p.radiusFactor;
+        const x = centerX + Math.cos(currentAngle) * coneRadius;
+        const z = Math.sin(currentAngle) * coneRadius;
+        const y = baseY - (p.progress * treeHeight) + (z * 0.12); // Slight 3D tilt
+
+        renderedParticles.push({ ...p, x, y, z });
+      });
+
+      renderedParticles.sort((a, b) => a.z - b.z);
+
+      renderedParticles.forEach(p => {
+        const depthScale = (p.z + maxRadius) / (2 * maxRadius); // 0 (back) to 1 (front)
+        const twinkle = 0.65 + 0.35 * Math.sin(time * 3 + p.twinkleOffset);
+        const radius = p.size * (0.6 + depthScale * 0.7);
+
+        ctx.save();
+        ctx.globalAlpha = (0.35 + depthScale * 0.65) * twinkle;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = depthScale > 0.5 ? 12 : 4;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Draw glowing Star once the spiral reaches the top
+      if (buildProgress >= 0.95) {
+        const starAlpha = Math.min(1, (buildProgress - 0.95) * 20);
+        const pulse = 1 + Math.sin(time * 3) * 0.12;
+        drawStar(centerX, baseY - treeHeight - 16, 5, 18 * pulse, 8 * pulse, starAlpha);
+      }
+
+      // Draw interactive tap hearts
+      for (let i = clickHearts.length - 1; i >= 0; i--) {
+        const h = clickHearts[i];
+        h.x += h.vx;
+        h.y += h.vy;
+        h.alpha -= 0.015;
+        if (h.alpha <= 0) {
+          clickHearts.splice(i, 1);
+        } else {
+          drawHeart(h.x, h.y, h.size, h.color, h.alpha);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
   </script>
 </body>
 </html>
