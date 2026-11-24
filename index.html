@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merry Christmas My Love</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at bottom, #0f2027, #203a43, #090d16);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
+      padding-bottom: 10vh;
+    }
+
+    /* Falling Snow */
+    .snow {
+      position: absolute;
+      top: -10px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      pointer-events: none;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(105vh);
+      }
+    }
+
+    /* Message Pop-up */
+    .message {
+      color: #ffd700;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 69, 0, 0.5);
+      opacity: 0;
+      transform: scale(0.5) translateY(30px);
+      animation: popUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation-delay: 2.2s; /* Appears right after tree finishes rising */
+      z-index: 10;
+      padding: 0 20px;
+    }
+
+    @keyframes popUp {
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Tree Container rising from below */
+    .tree-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateY(120%);
+      animation: riseUp 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes riseUp {
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    /* Glowing Star */
+    .star {
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-bottom: 32px solid #ffd700;
+      position: relative;
+      margin-bottom: -12px;
+      z-index: 5;
+      filter: drop-shadow(0 0 12px #ffd700);
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    .star::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 32px solid #ffd700;
+      position: absolute;
+      top: 10px;
+      left: -18px;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); filter: drop-shadow(0 0 8px #ffd700); }
+      to { transform: scale(1.15); filter: drop-shadow(0 0 20px #fff); }
+    }
+
+    /* Tree Layers */
+    .layer {
+      width: 0;
+      height: 0;
+      border-left: solid transparent;
+      border-right: solid transparent;
+      border-bottom: solid #1b5e20;
+      position: relative;
+      filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.4));
+    }
+
+    .layer-1 {
+      border-left-width: 60px;
+      border-right-width: 60px;
+      border-bottom-width: 80px;
+      border-bottom-color: #2e7d32;
+      z-index: 4;
+    }
+
+    .layer-2 {
+      border-left-width: 90px;
+      border-right-width: 90px;
+      border-bottom-width: 110px;
+      border-bottom-color: #256d29;
+      margin-top: -35px;
+      z-index: 3;
+    }
+
+    .layer-3 {
+      border-left-width: 120px;
+      border-right-width: 120px;
+      border-bottom-width: 140px;
+      border-bottom-color: #1b5e20;
+      margin-top: -45px;
+      z-index: 2;
+    }
+
+    /* Tree Trunk */
+    .trunk {
+      width: 44px;
+      height: 55px;
+      background: linear-gradient(to right, #3e2723, #5d4037, #3e2723);
+      border-radius: 0 0 6px 6px;
+      z-index: 1;
+    }
+
+    /* Blinking Ornaments */
+    .ornament {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: twinkle 1.2s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px currentColor; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="message">Merry Christmas my love ❤️</h1>
+
+  <div class="tree-container" id="tree">
+    <div class="star"></div>
+    <div class="layer layer-1"></div>
+    <div class="layer layer-2"></div>
+    <div class="layer layer-3"></div>
+    <div class="trunk"></div>
+  </div>
+
+  <script>
+    // Generate falling snowflakes
+    for (let i = 0; i < 60; i++) {
+      const snow = document.createElement('div');
+      snow.classList.add('snow');
+      const size = Math.random() * 5 + 2 + 'px';
+      snow.style.width = size;
+      snow.style.height = size;
+      snow.style.left = Math.random() * 100 + 'vw';
+      snow.style.animationDuration = Math.random() * 3 + 3 + 's';
+      snow.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(snow);
+    }
+
+    // Add colorful lights onto the tree
+    const tree = document.getElementById('tree');
+    const colors = ['#ff1744', '#ffd700', '#00e5ff', '#ff9100', '#f50057'];
+    const positions = [
+      { top: '65px', left: '125px' },
+      { top: '85px', left: '155px' },
+      { top: '125px', left: '105px' },
+      { top: '140px', left: '140px' },
+      { top: '130px', left: '175px' },
+      { top: '190px', left: '85px' },
+      { top: '210px', left: '125px' },
+      { top: '200px', left: '165px' },
+      { top: '220px', left: '195px' }
+    ];
+
+    positions.forEach((pos, index) => {
+      const light = document.createElement('div');
+      light.classList.add('ornament');
+      const color = colors[index % colors.length];
+      light.style.backgroundColor = color;
+      light.style.color = color;
+      light.style.top = pos.top;
+      light.style.left = pos.left;
+      light.style.animationDelay = (index * 0.2) + 's';
+      tree.appendChild(light);
+    });
+  </script>
+</body>
+</html>
